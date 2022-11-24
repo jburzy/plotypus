@@ -7,6 +7,7 @@ definitions:
         style:
           linecolor: '#01BAEF'
           linestyle: 2
+          linewidth: 2
           markerstyle: 20
           markersize: 0.0
         draw_style: "hist"
@@ -18,8 +19,9 @@ definitions:
         files: ["data18.root"]
         style:
           linecolor: '#00000'
+          linewidth: 2
           markerstyle: 20
-          markersize: 0.0
+          markersize: 1.0
         draw_style: "P"
         legend: "Data"
         legend_format: "pe"
@@ -27,21 +29,57 @@ definitions:
         is_data: True
         numerator: True
 
+  plot_styles:
+    - plot: &base
+        ratio: True
+        y_min: 0
+        y_axis_props:
+          max_digits: 3
+
+    - plot: &ntrk
+        <<: *base
+        ratio: False
+        log_scale_y: False
+        x_label: "n_{trk}"
+        x_min: 2
+        x_max: 15
+        y_min: 0.1
+        units: ""
+    - plot: &pt
+        <<: *base
+        ratio: True
+        log_scale_y: True
+        x_min: 0
+        x_max: 250
+        rebin: 10
+        y_min: 0.1
+        units: "GeV"
+
 plots:
   - name: "ntrk"
     samples:
       - *data
       - *signal
     path: "HtoDVHistsAlgo/secVtx_signal/ntrk"
-    ratio: True
-    log_scale_y: True
-    x_label: "n_{trk}"
-    pad_top: 0.18
-    x_min: 2
-    x_max: 15
-    y_min: 0.1
-    rebin: [2,5,8,15]
-    units: null
-    ratio_label: "Data/MC"
+    label: "Inclusive"
+    style: *ntrk
+  - name: "ntrk_crttbar"
+    samples:
+      - *data
+      - *signal
+    path: "HtoDVHistsAlgo_CRttbar/secVtx_signal/ntrk"
+    label: "Inclusive"
+    style: 
+      <<: *ntrk
+      log_scale_y: False
+  - name: "l1l2_pt"
+    samples:
+      - *data
+      - *signal
+    path: "HtoDVHistsAlgo_SRZ/l1l2_pt"
+    label: "Inclusive"
+    style: 
+      <<: *pt
+      x_label: "p_{T}"
 
 
