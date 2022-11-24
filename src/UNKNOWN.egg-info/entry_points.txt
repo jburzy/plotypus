@@ -1,2 +1,0 @@
-[console_scripts]
-dump-plots = plotypus.steering:main
