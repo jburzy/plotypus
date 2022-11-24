@@ -1,1 +1,5 @@
 *egg*
+*.pdf
+*__pycache__*
+*.root
+*.log

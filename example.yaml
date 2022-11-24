@@ -1,0 +1,43 @@
+definitions:
+  samples:
+    - sample: &signal
+        name: "signal"
+        files: ["PhPy8_ZllH_H125_a55a55_4b_ctau100_mc20e.root"]
+        legend: "Signal"
+        style:
+          linecolor: '#01BAEF'
+          linestyle: 2
+          markerstyle: 20
+          markersize: 0.0
+        draw_style: "hist"
+        legend_format: "L"
+        stack: False
+    - sample: &data
+        name: "data"
+        files: ["data18.root"]
+        style:
+          linecolor: '#00000'
+          markerstyle: 20
+          markersize: 0.0
+        draw_style: "P"
+        legend: "Data"
+        legend_format: "pe"
+        stack: False
+        is_data: True
+
+plots:
+  - name: "ntrk"
+    samples:
+      - *data
+      - *signal
+    path: "HtoDVHistsAlgo/secVtx_signal/ntrk"
+    ratio: False
+    log_scale_y: True
+    pad_top: 0.18
+    x_min: 2
+    x_max: 15
+    y_min: 0.1
+    rebin: [2,5,8,15]
+    units: null
+    
+
