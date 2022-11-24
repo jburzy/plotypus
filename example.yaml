@@ -12,6 +12,7 @@ definitions:
         draw_style: "hist"
         legend_format: "L"
         stack: False
+        denominator: True
     - sample: &data
         name: "data"
         files: ["data18.root"]
@@ -24,6 +25,7 @@ definitions:
         legend_format: "pe"
         stack: False
         is_data: True
+        numerator: True
 
 plots:
   - name: "ntrk"
@@ -31,13 +33,15 @@ plots:
       - *data
       - *signal
     path: "HtoDVHistsAlgo/secVtx_signal/ntrk"
-    ratio: False
+    ratio: True
     log_scale_y: True
+    x_label: "n_{trk}"
     pad_top: 0.18
     x_min: 2
     x_max: 15
     y_min: 0.1
     rebin: [2,5,8,15]
     units: null
-    
+    ratio_label: "Data/MC"
+
 

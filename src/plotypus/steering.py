@@ -8,16 +8,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('input_file', help='Input yaml file with the workflow specification')
     args = parser.parse_args()
-
-    logging.basicConfig(
-        level=logging.INFO if not args.debug else logging.DEBUG,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler("output.log"),
-            logging.StreamHandler()
-        ]
-    )
-
+    
     plot_specs = {}
     with open(args.input_file) as f:
         try:
