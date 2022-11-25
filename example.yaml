@@ -3,6 +3,7 @@ definitions:
     - sample: &signal
         name: "signal"
         files: ["PhPy8_ZllH_H125_a55a55_4b_ctau100_mc20e.root"]
+        type: 'hist'
         legend: "Signal"
         style:
           linecolor: '#01BAEF'
@@ -17,6 +18,7 @@ definitions:
     - sample: &data
         name: "data"
         files: ["data18.root"]
+        type: 'hist'
         style:
           linecolor: '#00000'
           linewidth: 2
@@ -33,6 +35,12 @@ definitions:
     - plot: &base
         ratio: True
         y_min: 0
+        lumi_val: 139.0
+        com_val: 13
+        show_lumi: True
+        show_com: True
+        show_atlas: True
+        atlas_mod: "Internal"
         y_axis_props:
           max_digits: 3
 

@@ -1,5 +1,6 @@
 import atlasplots as aplt
 import ROOT
+from .utils import getObj, getLumiStr
 
 def get_x_label(plot: dict) -> str:
 
@@ -28,8 +29,12 @@ def make_plot(plot: dict) -> None:
     # Create a figure and axes
     if ratio:
         fig, (ax1, ax2) = aplt.ratio_plot(name=plot['name'], figsize=(800, 800), hspace=0.10)
+        ax1.set_pad_margins(top=0.065, left=0.14)
+        ax2.set_pad_margins(left=0.14)
     else:
         fig, ax1 = aplt.subplots(1, 1, name=plot['name'], figsize=(800, 600))
+        ax1.set_pad_margins(top=0.065, left=0.13)
+
 
     # create legend
     legend = ax1.legend(
@@ -41,9 +46,15 @@ def make_plot(plot: dict) -> None:
     tfiles = []
 
     for sample in plot['samples']:
-        tfile = ROOT.TFile(sample['files'][0])
-        tfiles.append(tfile)
-        obj = tfile.Get(plot['path'])
+        obj = None
+        for f in sample['files']:
+            tf = ROOT.TFile(f)
+            tfiles.append(tf)
+            tmp_obj = getObj(tf, plot['path'], sample['type'])
+            if obj:
+                obj += tmp_obj
+            else:
+                obj = tmp_obj
 
         if plot_style.get('rebin'):
             rebin = plot_style['rebin']
@@ -75,7 +86,6 @@ def make_plot(plot: dict) -> None:
         ax1.set_yscale("log") 
 
     # Set axis titles
-    print(get_x_label(plot_style))
     (ax2 if ratio else ax1).set_xlabel(get_x_label(plot_style), titleoffset=1.3)
     ax1.set_ylabel(get_y_label(plot_style, obj.GetBinWidth(1)), maxdigits=3)
 
@@ -108,7 +118,14 @@ def make_plot(plot: dict) -> None:
     ax1.add_margins(top=plot_style.get('pad_top',0.20))
 
     # Add the ATLAS Label
-    aplt.atlas_label(text="Internal", loc="upper left")
-    ax1.text(0.2, 0.85, "#sqrt{s} = 13 TeV, 139 fb^{-1}", size=22, align=13)
+    if plot_style['show_atlas']:
+        aplt.atlas_label(text=plot_style['atlas_mod'], loc="upper left")
+
+    lumi_text = getLumiStr(plot_style)
+    ax1.text(plot.get('lumi_x',0.18), 
+             plot.get('lumi_y',0.84),
+             lumi_text, 
+             size=plot.get('lumi_size',22), 
+             align=13)
 
     fig.savefig(f"{plot['name']}.pdf")
