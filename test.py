@@ -38,10 +38,10 @@ def main():
     # Stack the background and signal histograms
     bkg_and_sig = root.THStack("bkg_and_sig", "")
     bkg_and_sig.Add(bkg_hist)
-    bkg_and_sig.Add(sig_hist)
 
     # Draw the stacked histogram on these axes
     ax1.plot(bkg_and_sig)
+    ax1.plot(sig_hist)
 
     # Plot the MC stat error as a hatched band
     err_band = aplt.root_helpers.hist_to_graph(

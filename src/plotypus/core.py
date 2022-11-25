@@ -40,15 +40,34 @@ def make_plot(plot: dict) -> None:
 
     # create legend
     legend = ax1.legend(
-        loc=(0.68, 0.75, 1 - ROOT.gPad.GetRightMargin() - 0.03, 1 - ROOT.gPad.GetTopMargin() - 0.03),
+        loc=(0.68, 0.65, 1 - ROOT.gPad.GetRightMargin() - 0.03, 1 - ROOT.gPad.GetTopMargin() - 0.04),
         textsize=22
     )
 
     # need to keep the tfiles open
     tfiles = []
+    hists = {}
+
+    draw_stack = False
+    stack =  ROOT.THStack("hist_stack","")
 
     for sample in plot['samples']:
         obj = None
+
+        # TODO: this assumes stacked items are first
+        if draw_stack and not sample.get('stack'):
+            ax1.plot(stack)
+            # Plot the MC stat error as a hatched band
+            err_band = aplt.root_helpers.hist_to_graph(
+                stack.GetStack().Last(),
+                show_bin_width=True
+            )
+            ax1.plot(err_band, "2", fillcolor=1, fillstyle=3254, linewidth=0)
+            legend.AddEntry(err_band, "MC Stat. Unc.", "F")
+            draw_stack = False
+            if not denominator:
+                denominator = stack
+
         for f in sample['files']:
             tf = ROOT.TFile(f)
             tfiles.append(tf)
@@ -83,6 +102,11 @@ def make_plot(plot: dict) -> None:
             obj_graph = aplt.root_helpers.hist_to_graph(obj)
             ax1.plot(obj_graph, 'P', **sample['style'])
             legend.AddEntry(obj_graph, legend_text, sample['legend_format'])
+        elif sample.get('stack'):
+            aplt.root_helpers.set_graphics_attributes(obj, **sample['style'])
+            stack.Add(obj)
+            draw_stack = True
+            legend.AddEntry(obj, legend_text, sample['legend_format'])
         else:
             ax1.plot(obj, sample['draw_style'], **sample['style'])
             legend.AddEntry(obj, legend_text, sample['legend_format'])
@@ -91,6 +115,7 @@ def make_plot(plot: dict) -> None:
             numerator = obj
         if sample.get('denominator'):
             denominator = obj
+        hists[sample['name']] = obj
 
     if ratio and (not numerator or not denominator):
         raise RuntimeError("Ratio requested but no numerator or denominator specified. Aborting")
@@ -110,7 +135,10 @@ def make_plot(plot: dict) -> None:
     if ratio:
         # Calculate and draw the ratio
         ratio_hist = numerator.Clone("ratio_hist")
-        ratio_hist.Divide(denominator)
+        if isinstance(denominator, ROOT.THStack):
+            ratio_hist.Divide(denominator.GetStack().Last())
+        else:
+            ratio_hist.Divide(denominator)
         ratio_graph = aplt.root_helpers.hist_to_graph(ratio_hist)
         ax2.plot(ratio_graph, "P0", linewidth=2)
 
@@ -125,6 +153,15 @@ def make_plot(plot: dict) -> None:
 
         if plot_style.get('draw_arrows'):
             ax2.draw_arrows_outside_range(ratio_graph)
+        
+        if stack.GetHists().First():
+            # Plot the relative error on the ratio axes
+            err_band_ratio = aplt.root_helpers.hist_to_graph(
+                stack.GetStack().Last(),
+                show_bin_width=True,
+                norm=True
+            )
+            ax2.plot(err_band_ratio, "2", fillcolor=1, fillstyle=3254)
 
     # Go back to top axes to add labels
     ax1.cd()
@@ -142,4 +179,5 @@ def make_plot(plot: dict) -> None:
              size=plot.get('lumi_size',22), 
              align=13)
 
+    ax1.pad.RedrawAxis()
     fig.savefig(f"{plot['name']}.pdf")

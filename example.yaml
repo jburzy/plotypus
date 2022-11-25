@@ -13,12 +13,10 @@ definitions:
           markersize: 0.0
         draw_style: "hist"
         legend_format: "L"
-        stack: False
-        denominator: True
-        scale: 1.0
+        scale: 100.0
     - sample: &data
         name: "data"
-        files: ["data18.root"]
+        files: ["/Users/jburzyns/Downloads/data18_outTree.root"]
         type: 'hist'
         style:
           linecolor: '#00000'
@@ -28,9 +26,48 @@ definitions:
         draw_style: "P"
         legend: "Data"
         legend_format: "pe"
-        stack: False
         is_data: True
         numerator: True
+    - sample: &VJets
+        name: "V+Jets"
+        files: ["/Users/jburzyns/Downloads/VJets1.root",
+                "/Users/jburzyns/Downloads/VJets2.root",
+                "/Users/jburzyns/Downloads/VJets3.root",
+                "/Users/jburzyns/Downloads/VJets4.root",
+                "/Users/jburzyns/Downloads/VJets5.root",
+                "/Users/jburzyns/Downloads/VJets6.root",
+                "/Users/jburzyns/Downloads/VJets7.root",
+                "/Users/jburzyns/Downloads/VJets8.root",
+                "/Users/jburzyns/Downloads/VJets9.root",
+                "/Users/jburzyns/Downloads/VJets10.root",
+                "/Users/jburzyns/Downloads/VJets11.root",
+                "/Users/jburzyns/Downloads/VJets12.root",
+                ]
+        type: 'hist'
+        style:
+          linecolor: '#7CFFC4'
+          fillcolor: '#7CFFC4'
+          linewidth: 2
+          markerstyle: 20
+          markersize: 1.0
+        draw_style: ""
+        legend: "V+jets"
+        legend_format: "f"
+        stack: True
+        is_data: False
+    - sample: &ttbar
+        name: "ttbar"
+        files: ["/Users/jburzyns/Downloads/ttbar.root"]
+        type: 'hist'
+        style:
+          linecolor: '#FC7753'
+          fillcolor: '#FC7753'
+          linewidth: 2
+        draw_style: ""
+        legend: "ttbar"
+        legend_format: "f"
+        stack: True
+        is_data: False
 
   plot_styles:
     - plot: &base
@@ -88,12 +125,17 @@ plots:
       log_scale_y: False
   - name: "l1l2_pt"
     samples:
-      - *data
+      - *ttbar
+      - *VJets
       - *signal
+      - *data
     path: "HtoDVHistsAlgo_SRZ/l1l2_pt"
     label: "Inclusive"
     style: 
       <<: *pt
-      x_label: "p_{T}"
+      x_label: "p_{T,ll}"
+      rebin: [0,5,10,25,50,100,150,250]
+      normalize: True
+      norm_strategy: "width"
 
 
