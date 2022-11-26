@@ -28,8 +28,7 @@ Example:
 samples:
   - sample: &signal
       name: "signal"
-      files: ["PhPy8_ZllH_H125_a55a55_4b_ctau100_mc20e.root"]
-      type: 'hist'
+      files: ["signal.root"]
       legend: "Signal"
       style:
         linecolor: '#01BAEF'
@@ -37,13 +36,11 @@ samples:
         linewidth: 2
         markerstyle: 20
         markersize: 0.0
-      draw_style: "hist"
       legend_format: "L"
       scale: 100.0
   - sample: &data
       name: "data"
-      files: ["/Users/jburzyns/Downloads/data18_outTree.root"]
-      type: 'hist'
+      files: ["data15.root","data16.root","data17.root","data18.root"]
       style:
         linecolor: '#00000'
         linewidth: 2
@@ -56,40 +53,24 @@ samples:
       numerator: True
   - sample: &VJets
       name: "V+Jets"
-      files: ["/Users/jburzyns/Downloads/VJets1.root",
-              "/Users/jburzyns/Downloads/VJets2.root",
-              "/Users/jburzyns/Downloads/VJets3.root",
-              "/Users/jburzyns/Downloads/VJets4.root",
-              "/Users/jburzyns/Downloads/VJets5.root",
-              "/Users/jburzyns/Downloads/VJets6.root",
-              "/Users/jburzyns/Downloads/VJets7.root",
-              "/Users/jburzyns/Downloads/VJets8.root",
-              "/Users/jburzyns/Downloads/VJets9.root",
-              "/Users/jburzyns/Downloads/VJets10.root",
-              "/Users/jburzyns/Downloads/VJets11.root",
-              "/Users/jburzyns/Downloads/VJets12.root",
-              ]
-      type: 'hist'
+      files: ["Zjets.root, Wjets.root"]
       style:
         linecolor: '#7CFFC4'
         fillcolor: '#7CFFC4'
         linewidth: 2
         markerstyle: 20
         markersize: 1.0
-      draw_style: ""
       legend: "V+jets"
       legend_format: "f"
       stack: True
       is_data: False
   - sample: &ttbar
       name: "ttbar"
-      files: ["/Users/jburzyns/Downloads/ttbar.root"]
-      type: 'hist'
+      files: ["ttbar.root"]
       style:
         linecolor: '#FC7753'
         fillcolor: '#FC7753'
         linewidth: 2
-      draw_style: ""
       legend: "ttbar"
       legend_format: "f"
       stack: True
