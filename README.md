@@ -20,6 +20,10 @@ Suppose you wanted to compare the $p_{T}$ distribution of a $Z$ boson candidate 
 
 ### Sample block
 
+The sample config defines all of the samples that will be used in your plots. In general, each sample corresponds to one entry in the legend. The location of the files and the styling are specified here.
+
+Example:
+
 ```
 samples:
   - sample: &signal
