@@ -40,7 +40,7 @@ def make_plot(plot: dict) -> None:
 
     # create legend
     legend = ax1.legend(
-        loc=(0.68, 0.65, 1 - ROOT.gPad.GetRightMargin() - 0.03, 1 - ROOT.gPad.GetTopMargin() - 0.04),
+        loc=(0.55, 0.65, 1 - ROOT.gPad.GetRightMargin() - 0.05, 1 - ROOT.gPad.GetTopMargin() - 0.05),
         textsize=22
     )
 
@@ -54,16 +54,8 @@ def make_plot(plot: dict) -> None:
     for sample in plot['samples']:
         obj = None
 
-        # TODO: this assumes stacked items are first
         if draw_stack and not sample.get('stack'):
             ax1.plot(stack)
-            # Plot the MC stat error as a hatched band
-            err_band = aplt.root_helpers.hist_to_graph(
-                stack.GetStack().Last(),
-                show_bin_width=True
-            )
-            ax1.plot(err_band, "2", fillcolor=1, fillstyle=3254, linewidth=0)
-            legend.AddEntry(err_band, "MC Stat. Unc.", "F")
             draw_stack = False
             if not denominator:
                 denominator = stack
@@ -92,7 +84,7 @@ def make_plot(plot: dict) -> None:
             elif plot_style.get('norm_strategy') == "width":
                 obj.Scale(1.0, "width")
 
-        legend_text = sample['name']
+        legend_text = sample.get('legend','')
         if sample.get('scale', 1.0) != 1.0:
             obj.Scale(sample.get('scale'))
             legend_text += f" (#times{sample.get('scale')})"
@@ -109,6 +101,11 @@ def make_plot(plot: dict) -> None:
             legend.AddEntry(obj, legend_text, sample['legend_format'])
         else:
             ax1.plot(obj, sample['draw_style'], **sample['style'])
+            err_band = aplt.root_helpers.hist_to_graph(
+                obj,
+                show_bin_width=True
+            )
+            ax1.plot(err_band, "2", fillcolor=obj.GetLineColor(), fillalpha=0.35, fillstyle=1001, linewidth=0)
             legend.AddEntry(obj, legend_text, sample['legend_format'])
 
         if sample.get('numerator'):
@@ -116,6 +113,16 @@ def make_plot(plot: dict) -> None:
         if sample.get('denominator'):
             denominator = obj
         hists[sample['name']] = obj
+
+    if stack.GetHists().First():
+        # Plot the MC stat error as a hatched band
+        err_band = aplt.root_helpers.hist_to_graph(
+            stack.GetStack().Last(),
+            show_bin_width=True
+        )
+        ax1.plot(err_band, "2", fillcolor=1, fillstyle=3254, linewidth=0)
+        legend.AddEntry(err_band, "MC Stat. Unc.", "F")
+
 
     if ratio and (not numerator or not denominator):
         raise RuntimeError("Ratio requested but no numerator or denominator specified. Aborting")
@@ -133,27 +140,11 @@ def make_plot(plot: dict) -> None:
     ax1.set_ylim(plot_style.get('y_min'), plot_style.get('y_max'))
     
     if ratio:
-        # Calculate and draw the ratio
-        ratio_hist = numerator.Clone("ratio_hist")
-        if isinstance(denominator, ROOT.THStack):
-            ratio_hist.Divide(denominator.GetStack().Last())
-        else:
-            ratio_hist.Divide(denominator)
-        ratio_graph = aplt.root_helpers.hist_to_graph(ratio_hist)
-        ax2.plot(ratio_graph, "P0", linewidth=2)
-
         # Draw line at y=1 in ratio panel
         line = ROOT.TLine(ax1.get_xlim()[0], plot_style.get('ratio_line',1), ax1.get_xlim()[1], plot_style.get('ratio_line',1))
         line.SetLineStyle(2)
         ax2.plot(line)
 
-        ax2.set_xlim(ax1.get_xlim())
-        ax2.set_ylim(plot_style.get('ratio_min',0.75), plot_style.get('ratio_min',1.25))
-        ax2.set_ylabel(plot_style.get('ratio_label','Data/MC'), loc="centre")
-
-        if plot_style.get('draw_arrows'):
-            ax2.draw_arrows_outside_range(ratio_graph)
-        
         if stack.GetHists().First():
             # Plot the relative error on the ratio axes
             err_band_ratio = aplt.root_helpers.hist_to_graph(
@@ -163,14 +154,31 @@ def make_plot(plot: dict) -> None:
             )
             ax2.plot(err_band_ratio, "2", fillcolor=1, fillstyle=3254)
 
+        # calculate and draw the ratio
+        ratio_hist = numerator.Clone("ratio_hist")
+        if isinstance(denominator, ROOT.THStack):
+            ratio_hist.Divide(denominator.GetStack().Last())
+        else:
+            ratio_hist.Divide(denominator)
+        ratio_graph = aplt.root_helpers.hist_to_graph(ratio_hist)
+        ax2.plot(ratio_graph, "P0", linewidth=2)
+
+        ax2.set_xlim(ax1.get_xlim())
+        ax2.set_ylim(plot_style.get('ratio_min',0.75), plot_style.get('ratio_max',1.25))
+        ax2.set_ylabel(plot_style.get('ratio_label','Data/MC'), loc="centre")
+
+        if plot_style.get('draw_arrows',True):
+            ax2.draw_arrows_outside_range(ratio_graph)
+        
+
     # Go back to top axes to add labels
     ax1.cd()
     # Add extra space at top of plot to make room for labels
     ax1.add_margins(top=plot_style.get('pad_top',0.20))
 
     # Add the ATLAS Label
-    if plot_style['show_atlas']:
-        aplt.atlas_label(text=plot_style['atlas_mod'], loc="upper left")
+    if plot_style.get('show_atlas',True):
+        aplt.atlas_label(text=plot_style.get('atlas_mod','Internal'), loc="upper left")
 
     lumi_text = getLumiStr(plot_style)
     ax1.text(plot.get('lumi_x',0.18), 
@@ -178,6 +186,13 @@ def make_plot(plot: dict) -> None:
              lumi_text, 
              size=plot.get('lumi_size',22), 
              align=13)
+
+    if plot_style.get('label',''):
+        ax1.text(plot.get('label_x',1-ROOT.gPad.GetRightMargin()-(0.012*len(plot_style.get('label')))), 
+                 plot.get('label_y',0.97),
+                 plot_style.get('label'),
+                 size=plot.get('label_size',18), 
+                 align=13)
 
     ax1.pad.RedrawAxis()
     fig.savefig(f"{plot['name']}.pdf")

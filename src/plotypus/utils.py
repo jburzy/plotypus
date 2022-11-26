@@ -17,12 +17,12 @@ def getLumiStr(plot_style: dict) -> str:
     lumiStr = ""
     comStr = ""
 
-    if plot_style['show_lumi']:
-        lumiStr = str(plot_style['lumi_val']) + " fb^{-1}"
-    if plot_style['show_com']:
-        comStr = "#sqrt{s} = " + str(plot_style['com_val'])
+    if plot_style.get('show_lumi',True):
+        lumiStr = str(plot_style.get('lumi_val',139.0)) + " fb^{-1}"
+    if plot_style.get('show_com',True):
+        comStr = "#sqrt{s} = " + str(plot_style.get('com_val',13))
     
-    if plot_style['show_lumi'] and plot_style['show_com']:
+    if plot_style.get('show_lumi',True) and plot_style.get('show_com',True):
         return f"{comStr}, {lumiStr}"
     else:
         return comStr + lumiStr
