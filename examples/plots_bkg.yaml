@@ -1,0 +1,262 @@
+samples:
+  - sample: &signal
+      name: "signal"
+      files: ["PhPy8_WmH_H125_a55a55_4b_ctau100_mc20e_outTree.root",
+              "PhPy8_WpH_H125_a55a55_4b_ctau100_mc20e_outTree.root",
+              "PhPy8_ZllH_H125_a55a55_4b_ctau100_mc20e_outTree.root",
+              "PhPy8_ggZllH_H125_a55a55_4b_ctau100_mc20e_outTree.root"
+      ]
+      type: 'hist'
+      legend: "m_{a},c#tau=[55, 100]"
+      style:
+        linecolor: '#01BAEF'
+        linestyle: 2
+        linewidth: 2
+        markerstyle: 20
+        markersize: 0.0
+      draw_style: "hist"
+      legend_format: "L"
+      scale: 2.37
+  - sample: &data
+      name: "data"
+      files: ["data18_bkg_outTree.root", "data17_bkg_outTree.root", "data16_bkg_outTree.root", "data15_bkg_outTree.root"]
+      type: 'hist'
+      style:
+        linecolor: '#00000'
+        linewidth: 2
+        markerstyle: 20
+        markersize: 1.0
+      draw_style: "P"
+      legend: "Data"
+      legend_format: "pe"
+      is_data: True
+      numerator: True
+  - sample: &bkg
+      name: "bkg"
+      files: ["data18_bkg_outTree.root", "data17_bkg_outTree.root", "data16_bkg_outTree.root", "data15_bkg_outTree.root"]
+      type: 'hist'
+      style:
+        linecolor: '#000000'
+        #fillcolor: '#D05353'
+        linewidth: 2
+        markerstyle: 24
+        markersize: 1.0
+      draw_style: "P"
+      legend: "Bkg. (pred)"
+      legend_format: "pe"
+      is_data: True
+      denominator: True
+  - sample: &VJets
+      name: "VJets"
+      files: [
+              "Sh_2211_Wenu_maxHTpTV2_BFilter_mc20a_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_BFilter_mc20d_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_BFilter_mc20e_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_CFilterBVeto_mc20a_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_CFilterBVeto_mc20d_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_CFilterBVeto_mc20e_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_CVetoBVeto_mc20a_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_CVetoBVeto_mc20d_outTree.root",
+              "Sh_2211_Wenu_maxHTpTV2_CVetoBVeto_mc20e_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_BFilter_mc20a_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_BFilter_mc20d_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_BFilter_mc20e_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_CFilterBVeto_mc20a_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_CFilterBVeto_mc20d_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_CFilterBVeto_mc20e_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_CVetoBVeto_mc20a_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_CVetoBVeto_mc20d_outTree.root",
+              "Sh_2211_Wmunu_maxHTpTV2_CVetoBVeto_mc20e_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_BFilter_mc20a_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_BFilter_mc20d_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_BFilter_mc20e_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_CFilterBVeto_mc20a_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_CFilterBVeto_mc20d_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_CFilterBVeto_mc20e_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_CVetoBVeto_mc20a_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_CVetoBVeto_mc20d_outTree.root",
+              "Sh_2211_Zee_maxHTpTV2_CVetoBVeto_mc20e_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_BFilter_mc20a_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_BFilter_mc20d_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_BFilter_mc20e_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_CFilterBVeto_mc20a_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_CFilterBVeto_mc20d_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_CFilterBVeto_mc20e_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_CVetoBVeto_mc20a_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_CVetoBVeto_mc20d_outTree.root",
+              "Sh_2211_Zmumu_maxHTpTV2_CVetoBVeto_mc20e_outTree.root",
+              ]
+      type: 'hist'
+      style:
+        linecolor: '#7CFFC4'
+        fillcolor: '#7CFFC4'
+        linewidth: 2
+        markerstyle: 20
+        markersize: 1.0
+      draw_style: ""
+      legend: "V+jets"
+      legend_format: "f"
+      stack: True
+      is_data: False
+  - sample: &ttbar
+      name: "ttbar"
+      files: ["PhPy8EG_A14_ttbar_hdamp258p75_nonallhad_mc20a_outTree.root",
+              "PhPy8EG_A14_ttbar_hdamp258p75_nonallhad_mc20d_outTree.root",
+              "PhPy8EG_A14_ttbar_hdamp258p75_nonallhad_mc20e_outTree.root"]
+      type: 'hist'
+      style:
+        linecolor: '#FC7753'
+        fillcolor: '#FC7753'
+        linewidth: 2
+      draw_style: ""
+      legend: "ttbar"
+      legend_format: "f"
+      stack: True
+      is_data: False
+
+plot_styles:
+  - plot: &base
+      ratio: True
+      y_min: 0
+      lumi_val: 139.0
+      com_val: 13
+      show_lumi: True
+      show_com: True
+      show_atlas: True
+      atlas_mod: "Internal"
+      log_scale_y: True
+      pad_top: 0.3
+      y_axis_props:
+        max_digits: 3
+
+  - plot: &bdt
+      <<: *base
+      ratio: False
+      y_min: 0.1
+      x_min: 0.5
+      rebin: 5
+      units: ""
+
+plots:
+ # Z region plots
+  - name: "SR_2lep_0DV_j1j2_score"
+    samples:
+      - *ttbar
+      - *VJets
+      - *signal
+      - *bkg
+    paths: 
+      ttbar: "HtoDVHistsAlgo_SRZ0DV/j1j2_score"
+      VJets: "HtoDVHistsAlgo_SRZ0DV/j1j2_score"
+      signal: "HtoDVHistsAlgo_SRZ0DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_SRZBkg0DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "SR_2lep_0DV"
+      rebin: 10
+      log_scale_y: True
+  - name: "SR_2lep_1DV_j1j2_score"
+    samples:
+      - *ttbar
+      - *VJets
+      - *signal
+      - *bkg
+    paths: 
+      ttbar: "HtoDVHistsAlgo_SRZ1DV/j1j2_score"
+      VJets: "HtoDVHistsAlgo_SRZ1DV/j1j2_score"
+      signal: "HtoDVHistsAlgo_SRZ1DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_SRZBkg1DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "SR_2lep_1DV"
+      rebin: 10
+      log_scale_y: True
+  - name: "SR_2lep_2DV_j1j2_score"
+    samples:
+      - *ttbar
+      - *VJets
+      - *signal
+      - *bkg
+    paths: 
+      ttbar: "HtoDVHistsAlgo_SRZ2DV/j1j2_score"
+      VJets: "HtoDVHistsAlgo_SRZ2DV/j1j2_score"
+      signal: "HtoDVHistsAlgo_SRZ2DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_SRZBkg2DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "SR_2lep_2DV"
+      rebin: 50
+      log_scale_y: True
+ # W region plots
+  - name: "SR_1lep_0DV_j1j2_score"
+    samples:
+      - *ttbar
+      - *VJets
+      - *signal
+      - *bkg
+    paths: 
+      ttbar: "HtoDVHistsAlgo_SRW0DV/j1j2_score"
+      VJets: "HtoDVHistsAlgo_SRW0DV/j1j2_score"
+      signal: "HtoDVHistsAlgo_SRW0DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_SRWBkg0DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "SR_1lep_0DV"
+      rebin: 10
+      log_scale_y: True
+  - name: "SR_1lep_1DV_j1j2_score"
+    samples:
+      - *ttbar
+      - *VJets
+      - *signal
+      - *bkg
+    paths: 
+      ttbar: "HtoDVHistsAlgo_SRW1DV/j1j2_score"
+      VJets: "HtoDVHistsAlgo_SRW1DV/j1j2_score"
+      signal: "HtoDVHistsAlgo_SRW1DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_SRWBkg1DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "SR_1lep_1DV"
+      rebin: 10
+      log_scale_y: True
+  - name: "SR_1lep_2DV_j1j2_score"
+    samples:
+      - *ttbar
+      - *VJets
+      - *signal
+      - *bkg
+    paths: 
+      ttbar: "HtoDVHistsAlgo_SRW2DV/j1j2_score"
+      VJets: "HtoDVHistsAlgo_SRW2DV/j1j2_score"
+      signal: "HtoDVHistsAlgo_SRW2DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_SRWBkg2DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "SR_1lep_2DV"
+      rebin: 50
+      log_scale_y: True
+  - name: "VR_gamma_1DV_j1j2_score"
+    samples:
+      - *data
+      - *bkg
+    paths: 
+      data: "HtoDVHistsAlgo_VRphot1DV/j1j2_score"
+      bkg: "HtoDVHistsAlgo_VRphotBkg1DV_0/j1j2_score"
+    style: 
+      <<: *bdt
+      x_label: "j_{1}j_{2}"
+      label: "VR_gamma_1DV"
+      rebin: 50
+      log_scale_y: True
+      stack: False
+      ratio: True
+      ratio_min: 0
+      ratio_max: 2.5
+      ratio_label: "Data/Pred. Bkg."

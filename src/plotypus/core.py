@@ -50,6 +50,7 @@ def make_plot(plot: dict) -> None:
 
     draw_stack = False
     stack =  ROOT.THStack("hist_stack","")
+    err_band = None
 
     for sample in plot['samples']:
         obj = None
@@ -63,7 +64,12 @@ def make_plot(plot: dict) -> None:
         for f in sample['files']:
             tf = ROOT.TFile(f)
             tfiles.append(tf)
-            tmp_obj = getObj(tf, plot['path'], sample['type'])
+            path = ""
+            if isinstance(plot.get('paths'), dict):
+                path = plot.get('paths')[sample['name']]
+            else:
+                path = plot.get('paths')
+            tmp_obj = getObj(tf, path, sample['type'])
             if obj:
                 obj += tmp_obj
             else:
@@ -74,7 +80,7 @@ def make_plot(plot: dict) -> None:
             if isinstance(rebin, list):
                 import array
                 xbins = array.array('d', rebin)
-                obj = obj.Rebin(len(xbins)-1, obj.GetName() + "_rebin", xbins)
+                obj = obj.Rebin(len(xbins)-1, obj.GetName() + sample['name'] + "_rebin", xbins)
             else:
                 obj = obj.Rebin(rebin, obj.GetName() + "_rebin")
 
@@ -92,20 +98,22 @@ def make_plot(plot: dict) -> None:
         if sample.get('is_data'):
             obj.SetBinErrorOption(ROOT.TH1.EBinErrorOpt.kPoisson)
             obj_graph = aplt.root_helpers.hist_to_graph(obj)
-            ax1.plot(obj_graph, 'P', **sample['style'])
+            ax1.plot(obj_graph, options=sample['draw_style'], **sample['style'])
             legend.AddEntry(obj_graph, legend_text, sample['legend_format'])
+            hists[sample['name']+'graph'] = obj_graph
         elif sample.get('stack'):
             aplt.root_helpers.set_graphics_attributes(obj, **sample['style'])
             stack.Add(obj)
             draw_stack = True
             legend.AddEntry(obj, legend_text, sample['legend_format'])
         else:
-            ax1.plot(obj, sample['draw_style'], **sample['style'])
+            ax1.plot(obj, options=sample['draw_style'], **sample['style'])
             err_band = aplt.root_helpers.hist_to_graph(
                 obj,
                 show_bin_width=True
             )
-            ax1.plot(err_band, "2", fillcolor=obj.GetLineColor(), fillalpha=0.35, fillstyle=1001, linewidth=0)
+            hists[sample['name']+'err'] = err_band
+            ax1.plot(err_band, options="2 same", fillcolor=obj.GetLineColor(), fillalpha=0.35, fillstyle=1001, linewidth=0)
             legend.AddEntry(obj, legend_text, sample['legend_format'])
 
         if sample.get('numerator'):
@@ -114,15 +122,14 @@ def make_plot(plot: dict) -> None:
             denominator = obj
         hists[sample['name']] = obj
 
-    if stack.GetHists().First():
+    if stack.GetHists():
         # Plot the MC stat error as a hatched band
         err_band = aplt.root_helpers.hist_to_graph(
             stack.GetStack().Last(),
             show_bin_width=True
         )
-        ax1.plot(err_band, "2", fillcolor=1, fillstyle=3254, linewidth=0)
+        ax1.plot(err_band, options="2 same", fillcolor=1, fillstyle=3254, linewidth=0)
         legend.AddEntry(err_band, "MC Stat. Unc.", "F")
-
 
     if ratio and (not numerator or not denominator):
         raise RuntimeError("Ratio requested but no numerator or denominator specified. Aborting")
@@ -145,14 +152,14 @@ def make_plot(plot: dict) -> None:
         line.SetLineStyle(2)
         ax2.plot(line)
 
-        if stack.GetHists().First():
+        if stack.GetHists():
             # Plot the relative error on the ratio axes
             err_band_ratio = aplt.root_helpers.hist_to_graph(
                 stack.GetStack().Last(),
                 show_bin_width=True,
                 norm=True
             )
-            ax2.plot(err_band_ratio, "2", fillcolor=1, fillstyle=3254)
+            ax2.plot(err_band_ratio, options="2 same", fillcolor=1, fillstyle=3254)
 
         # calculate and draw the ratio
         ratio_hist = numerator.Clone("ratio_hist")
@@ -161,7 +168,7 @@ def make_plot(plot: dict) -> None:
         else:
             ratio_hist.Divide(denominator)
         ratio_graph = aplt.root_helpers.hist_to_graph(ratio_hist)
-        ax2.plot(ratio_graph, "P0", linewidth=2)
+        ax2.plot(ratio_graph, options="P0", linewidth=2)
 
         ax2.set_xlim(ax1.get_xlim())
         ax2.set_ylim(plot_style.get('ratio_min',0.75), plot_style.get('ratio_max',1.25))
@@ -188,7 +195,7 @@ def make_plot(plot: dict) -> None:
              align=13)
 
     if plot_style.get('label',''):
-        ax1.text(plot.get('label_x',1-ROOT.gPad.GetRightMargin()-(0.012*len(plot_style.get('label')))), 
+        ax1.text(plot.get('label_x',1-ROOT.gPad.GetRightMargin()-(0.0135*len(plot_style.get('label')))), 
                  plot.get('label_y',0.97),
                  plot_style.get('label'),
                  size=plot.get('label_size',18), 
