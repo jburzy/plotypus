@@ -9,10 +9,10 @@ def get_x_label(plot: dict) -> str:
         label += f" [{plot.get('units')}]"
     return label
 
-def get_y_label(plot: dict, bin_width: str = '') -> str:
+def get_y_label(plot: dict, bin_width: str = '', draw_units: bool = False) -> str:
 
     label = plot.get('y_label',"Events")
-    if plot.get('units'):
+    if plot.get('units') and draw_units:
         label += f" / {bin_width} {plot.get('units')}"
     if plot.get('normalize') and plot.get('norm_strategy') == 'area':
         label = "Fraction of " + label
@@ -108,12 +108,13 @@ def make_plot(plot: dict) -> None:
             legend.AddEntry(obj, legend_text, sample['legend_format'])
         else:
             ax1.plot(obj, options=sample['draw_style'], **sample['style'])
-            err_band = aplt.root_helpers.hist_to_graph(
-                obj,
-                show_bin_width=True
-            )
-            hists[sample['name']+'err'] = err_band
-            ax1.plot(err_band, options="2 same", fillcolor=obj.GetLineColor(), fillalpha=0.35, fillstyle=1001, linewidth=0)
+            if isinstance(obj, ROOT.TH1):
+                err_band = aplt.root_helpers.hist_to_graph(
+                    obj,
+                    show_bin_width=True
+                )
+                hists[sample['name']+'err'] = err_band
+                ax1.plot(err_band, options="2 same", fillcolor=obj.GetLineColor(), fillalpha=0.35, fillstyle=1001, linewidth=0)
             legend.AddEntry(obj, legend_text, sample['legend_format'])
 
         if sample.get('numerator'):
@@ -136,11 +137,16 @@ def make_plot(plot: dict) -> None:
 
     if plot_style.get('log_scale_y'):
         ax1.set_yscale("log") 
+    if plot_style.get('log_scale_x'):
+        ax1.set_xscale("log") 
 
     # Set axis titles
     (ax2 if ratio else ax1).set_xlabel(get_x_label(plot_style), titleoffset=1.3)
-    ax1.set_ylabel(get_y_label(plot_style, str(obj.GetBinWidth(1)) if not
-        plot_style.get('norm_strategy') == 'width' else ''), maxdigits=3)
+    if isinstance(obj, ROOT.TH1):
+        ax1.set_ylabel(get_y_label(plot_style, str(obj.GetBinWidth(1)) if not
+            plot_style.get('norm_strategy') == 'width' else '', isinstance(obj, ROOT.TH1)), maxdigits=3)
+    else:
+        ax1.set_ylabel(get_y_label(plot_style, ''))
 
     # set the main axis limits
     ax1.set_xlim(plot_style.get('x_min'), plot_style.get('x_max'))

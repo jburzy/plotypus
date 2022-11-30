@@ -1,0 +1,68 @@
+samples:
+  - sample: &exp_upperlimit
+      name: "exp_upperlimit"
+      files: ["limits-merged-R21-R22.root"]
+      type: "hist"
+      legend: "exp."
+      style:
+        linecolor: '#00000'
+        linestyle: 2
+        linewidth: 2
+        markerstyle: 20
+        markersize: 0.0
+      draw_style: "L"
+      legend_format: "L"
+  - sample: &exp_upperlimit_pm1
+      name: "exp_upperlimit_pm1"
+      files: ["limits-merged-R21-R22.root"]
+      type: "hist"
+      legend: "exp #pm 1#sigma"
+      style:
+        fillcolor: '#02f03a'
+        linecolor: '#02f03a'
+        linewidth: 0
+      draw_style: "3"
+      legend_format: "f"
+  - sample: &exp_upperlimit_pm2
+      name: "exp_upperlimit_pm2"
+      files: ["limits-merged-R21-R22.root"]
+      type: "hist"
+      legend: "exp #pm 2#sigma"
+      style:
+        fillcolor: '#faf202'
+        linecolor: '#faf202'
+        linewidth: 0
+      draw_style: "3"
+      legend_format: "f"
+
+plot_styles:
+  - plot: &base
+      y_max: 1
+      y_min: 0.005
+      x_min: 0.005
+      x_max: 1.0
+      lumi_val: 139.0
+      com_val: 13
+      show_lumi: True
+      show_com: True
+      show_atlas: True
+      atlas_mod: "Internal"
+      log_scale_y: True
+      log_scale_x: True
+      y_axis_props:
+        max_digits: 3
+plots:
+  - name: "limit"
+    samples:
+      - *exp_upperlimit_pm2
+      - *exp_upperlimit_pm1
+      - *exp_upperlimit
+    paths: 
+      exp_upperlimit_pm2: "g_exp_upperlimit_pm2"
+      exp_upperlimit_pm1: "g_exp_upperlimit_pm1"
+      exp_upperlimit: "g_exp_upperlimit"
+    style: 
+      <<: *base
+      x_label: "c#tau_{a}"
+      units: "mm"
+      log_scale_y: True
