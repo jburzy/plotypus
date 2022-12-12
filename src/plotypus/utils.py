@@ -20,7 +20,7 @@ def getLumiStr(plot_style: dict) -> str:
     if plot_style.get('show_lumi',True):
         lumiStr = str(plot_style.get('lumi_val',139.0)) + " fb^{-1}"
     if plot_style.get('show_com',True):
-        comStr = "#sqrt{s} = " + str(plot_style.get('com_val',13))
+        comStr = "#sqrt{s} = " + str(plot_style.get('com_val',13)) + " TeV"
     
     if plot_style.get('show_lumi',True) and plot_style.get('show_com',True):
         return f"{comStr}, {lumiStr}"
