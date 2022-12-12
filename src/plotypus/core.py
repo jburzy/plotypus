@@ -40,7 +40,7 @@ def make_plot(plot: dict) -> None:
 
     # create legend
     legend = ax1.legend(
-        loc=(0.55, 0.65, 1 - ROOT.gPad.GetRightMargin() - 0.05, 1 - ROOT.gPad.GetTopMargin() - 0.05),
+        loc=(0.5, 0.65, 1 - ROOT.gPad.GetRightMargin() - 0.05, 1 - ROOT.gPad.GetTopMargin() - 0.05),
         textsize=22
     )
 
@@ -144,7 +144,7 @@ def make_plot(plot: dict) -> None:
     (ax2 if ratio else ax1).set_xlabel(get_x_label(plot_style), titleoffset=1.3)
     if isinstance(obj, ROOT.TH1):
         ax1.set_ylabel(get_y_label(plot_style, str(obj.GetBinWidth(1)) if not
-            plot_style.get('norm_strategy') == 'width' else '', isinstance(obj, ROOT.TH1)), maxdigits=3)
+            plot_style.get('norm_strategy') == 'width' else '', isinstance(obj, ROOT.TH1)), maxdigits=3, titleoffset=1.7)
     else:
         ax1.set_ylabel(get_y_label(plot_style, ''))
 
