@@ -88,12 +88,8 @@ def make_plot(plot: dict) -> None:
                 obj = tmp_obj
 
         if is2D:
-            rebin = 1
-            if plot_style.get('rebin'):
-                rebin = plot_style['rebin']
-            rebin_y = 1
-            if plot_style.get('rebin_y'):
-                rebin_y = plot_style['rebin_y']
+            rebin = plot_style.get('rebin', 1)
+            rebin_y = plot_style.get('rebin_y', 1)
             if rebin != 1 or rebin_y != 1:
                 obj = obj.Rebin2D(rebin, rebin_y, obj.GetName() + "_rebin2D")    
         elif plot_style.get('rebin'):
