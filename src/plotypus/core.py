@@ -87,20 +87,22 @@ def make_plot(plot: dict) -> None:
             else:
                 obj = tmp_obj
 
-        if plot_style.get('rebin'):
+        if is2D:
+            rebin = 1
+            if plot_style.get('rebin'):
+                rebin = plot_style['rebin']
+            rebin_y = 1
+            if plot_style.get('rebin_y'):
+                rebin_y = plot_style['rebin_y']
+            obj = obj.Rebin2D(rebin, rebin_y, obj.GetName() + "_rebin2D")    
+        elif plot_style.get('rebin'):
             rebin = plot_style['rebin']
-            if is2D:
-                rebin_y = 1
-                if plot_style.get('rebin_y'):
-                    rebin_y = plot_style['rebin_y']
-                obj = obj.Rebin2D(rebin, rebin_y, obj.GetName() + "_rebin2D")
+            if isinstance(rebin, list):
+                import array
+                xbins = array.array('d', rebin)
+                obj = obj.Rebin(len(xbins)-1, obj.GetName() + sample['name'] + "_rebin", xbins)
             else:
-                if isinstance(rebin, list):
-                    import array
-                    xbins = array.array('d', rebin)
-                    obj = obj.Rebin(len(xbins)-1, obj.GetName() + sample['name'] + "_rebin", xbins)
-                else:
-                    obj = obj.Rebin(rebin, obj.GetName() + "_rebin")
+                obj = obj.Rebin(rebin, obj.GetName() + "_rebin")
             
         if plot_style.get('normalize'):
             if is2D and plot_style.get('norm_strategy') != "area":
