@@ -94,7 +94,8 @@ def make_plot(plot: dict) -> None:
             rebin_y = 1
             if plot_style.get('rebin_y'):
                 rebin_y = plot_style['rebin_y']
-            obj = obj.Rebin2D(rebin, rebin_y, obj.GetName() + "_rebin2D")    
+            if rebin != 1 or rebin_y != 1:
+                obj = obj.Rebin2D(rebin, rebin_y, obj.GetName() + "_rebin2D")    
         elif plot_style.get('rebin'):
             rebin = plot_style['rebin']
             if isinstance(rebin, list):
