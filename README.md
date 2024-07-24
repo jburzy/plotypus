@@ -7,7 +7,7 @@
 Install the package using the `setuptools` script:
 
 ```
-python setup.py install
+python setup.py develop
 ```
 This will install the executable `dump-plots`, which takes only a single config file as a parameters:
 ```
