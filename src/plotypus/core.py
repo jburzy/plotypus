@@ -23,7 +23,7 @@ def get_y_label(plot: dict, bin_width: str = '', draw_units: bool = False) -> st
 def make_plot(plot: dict) -> None:
     # Set the ATLAS Style
     aplt.set_atlas_style()
-    ROOT.TGaxis.SetMaxDigits(3)
+    ROOT.TGaxis.SetMaxDigits(4)
 
     plot_style = plot['style']
     ratio = plot_style.get('ratio')
@@ -168,6 +168,8 @@ def make_plot(plot: dict) -> None:
 
     # Set axis titles
     (ax2 if ratio else ax1).set_xlabel(get_x_label(plot_style), titleoffset=1.3, **plot_style)
+    if ratio:
+        ax1.frame.GetXaxis().SetLabelSize(0)
     if isinstance(obj, ROOT.TH1):
         ax1.set_ylabel(get_y_label(plot_style, str(obj.GetBinWidth(1)) if not
             plot_style.get('norm_strategy') == 'width' else '4.0', isinstance(obj, ROOT.TH1)), maxdigits=3, titleoffset=plot_style.get('title_offset',1.75), titlesize=plot_style.get('title_size',28))
