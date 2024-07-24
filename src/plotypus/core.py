@@ -29,6 +29,7 @@ def make_plot(plot: dict) -> None:
 
     plot_style = plot['style']
     ratio = plot_style.get('ratio')
+    is2D = plot_style.get('2D')
 
     numerators = []
     denominators = []
